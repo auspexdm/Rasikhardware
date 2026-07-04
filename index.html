@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rasik Hardware – Alibag's Trusted Hardware Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A;
+    --blue: #1A4B8C;
+    --accent: #E8500A;
+    --steel: #4A5568;
+    --light: #F7F9FC;
+    --border: #E2E8F0;
+    --white: #ffffff;
+    --sale: #D63636;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; background:var(--white); color:var(--navy); }
+
+  /* NAV */
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:var(--navy); padding:0 5%;
+    display:flex; align-items:center; justify-content:space-between;
+    height:68px; box-shadow:0 2px 20px rgba(0,0,0,.25);
+  }
+  .logo { display:flex; align-items:center; gap:12px; text-decoration:none; }
+  .logo-icon {
+    width:42px; height:42px; background:var(--accent);
+    border-radius:8px; display:flex; align-items:center; justify-content:center;
+  }
+  .logo-icon svg { width:22px; height:22px; fill:white; }
+  .logo-text { font-family:'Syne',sans-serif; font-size:1.15rem; color:white; line-height:1.1; }
+  .logo-text span { display:block; font-size:.65rem; font-weight:400; color:#94A3B8; font-family:'Inter',sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+  .nav-links { display:flex; gap:32px; list-style:none; }
+  .nav-links a { color:#CBD5E1; text-decoration:none; font-size:.875rem; font-weight:500; letter-spacing:.02em; transition:color .2s; }
+  .nav-links a:hover, .nav-links a.active { color:white; }
+  .nav-cta { background:var(--accent); color:white; padding:8px 20px; border-radius:6px; text-decoration:none; font-size:.875rem; font-weight:600; transition:background .2s; }
+  .nav-cta:hover { background:#C4400A; }
+  .nav-right { display:flex; align-items:center; gap:16px; }
+  .cart-icon { color:#CBD5E1; cursor:pointer; position:relative; }
+  .cart-badge { position:absolute; top:-6px; right:-6px; background:var(--accent); color:white; font-size:.6rem; font-weight:700; border-radius:50%; width:16px; height:16px; display:flex; align-items:center; justify-content:center; }
+  .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+  .hamburger span { width:24px; height:2px; background:white; display:block; }
+  .promo-bar {
+    background:var(--accent); color:white; text-align:center;
+    padding:8px; font-size:.8rem; font-weight:600; letter-spacing:.05em;
+  }
+
+  /* PAGE SYSTEM */
+  .page { display:none; }
+  .page.active { display:block; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1A2E4A 60%, #1A4B8C 100%);
+    padding: 90px 5% 80px; position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; top:0; right:0; width:55%; height:100%;
+    background: url('https://rasikhardware.com/wp-content/uploads/2025/09/channel-partners-around-50kms-1024x576.jpg') center/cover;
+    opacity:.12;
+  }
+  .hero-inner { position:relative; max-width:600px; }
+  .hero-badge { display:inline-block; background:rgba(232,80,10,.2); color:#FF8A5C; border:1px solid rgba(232,80,10,.4); padding:5px 14px; border-radius:20px; font-size:.75rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:20px; }
+  .hero h1 { font-family:'Syne',sans-serif; font-size:clamp(2.2rem,5vw,3.6rem); color:white; line-height:1.1; margin-bottom:16px; }
+  .hero h1 em { color:var(--accent); font-style:normal; }
+  .hero p { color:#94A3B8; font-size:1.05rem; line-height:1.7; margin-bottom:32px; max-width:480px; }
+  .hero-btns { display:flex; gap:14px; flex-wrap:wrap; }
+  .btn-primary { background:var(--accent); color:white; padding:13px 28px; border-radius:8px; text-decoration:none; font-weight:600; font-size:.9rem; transition:all .2s; border:none; cursor:pointer; display:inline-block; }
+  .btn-primary:hover { background:#C4400A; transform:translateY(-1px); }
+  .btn-outline { background:transparent; color:white; padding:13px 28px; border-radius:8px; border:1px solid rgba(255,255,255,.25); text-decoration:none; font-weight:600; font-size:.9rem; transition:all .2s; display:inline-block; }
+  .btn-outline:hover { background:rgba(255,255,255,.08); }
+  .hero-stats { display:flex; gap:40px; margin-top:52px; padding-top:40px; border-top:1px solid rgba(255,255,255,.08); }
+  .stat-num { font-family:'Syne',sans-serif; font-size:1.9rem; color:white; }
+  .stat-label { font-size:.78rem; color:#64748B; text-transform:uppercase; letter-spacing:.06em; margin-top:3px; }
+
+  /* TRUST BAR */
+  .trust-bar { background:var(--light); border-bottom:1px solid var(--border); padding:24px 5%; }
+  .trust-items { display:flex; gap:0; justify-content:space-around; flex-wrap:wrap; }
+  .trust-item { display:flex; align-items:center; gap:10px; padding:12px 20px; }
+  .trust-icon { width:38px; height:38px; background:rgba(26,75,140,.1); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .trust-icon svg { width:18px; height:18px; stroke:var(--blue); fill:none; stroke-width:2; }
+  .trust-text strong { display:block; font-size:.85rem; font-weight:600; color:var(--navy); }
+  .trust-text span { font-size:.75rem; color:var(--steel); }
+
+  /* SECTION HEADERS */
+  .section { padding:72px 5%; }
+  .section-header { text-align:center; margin-bottom:48px; }
+  .section-eyebrow { font-size:.75rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  .section-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3vw,2.4rem); color:var(--navy); }
+  .section-sub { color:var(--steel); margin-top:10px; font-size:.95rem; }
+
+  /* FEATURED PRODUCTS */
+  .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:24px; }
+  .product-card {
+    background:white; border:1px solid var(--border); border-radius:12px;
+    overflow:hidden; transition:all .25s; cursor:pointer;
+  }
+  .product-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.1); border-color:var(--blue); }
+  .product-img-wrap { position:relative; aspect-ratio:1; background:#F7F9FC; overflow:hidden; }
+  .product-img-wrap img { width:100%; height:100%; object-fit:cover; transition:transform .3s; }
+  .product-card:hover .product-img-wrap img { transform:scale(1.04); }
+  .sale-badge { position:absolute; top:12px; left:12px; background:var(--sale); color:white; padding:3px 9px; border-radius:4px; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+  .product-info { padding:16px; }
+  .product-category { font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; color:var(--steel); margin-bottom:5px; }
+  .product-name { font-weight:600; font-size:.875rem; color:var(--navy); line-height:1.4; margin-bottom:10px; }
+  .price-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .price-current { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:700; color:var(--navy); }
+  .price-original { font-size:.8rem; color:#94A3B8; text-decoration:line-through; }
+  .add-btn {
+    width:100%; margin-top:12px; padding:9px; background:var(--navy); color:white;
+    border:none; border-radius:7px; font-size:.8rem; font-weight:600; cursor:pointer;
+    letter-spacing:.03em; transition:background .2s;
+  }
+  .add-btn:hover { background:var(--blue); }
+
+  /* BRANDS */
+  .brands-section { background:var(--light); }
+  .brands-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+  .brand-card {
+    background:white; border:1px solid var(--border); border-radius:10px;
+    padding:24px; display:flex; gap:16px; align-items:flex-start;
+    transition:box-shadow .2s;
+  }
+  .brand-card:hover { box-shadow:0 8px 24px rgba(0,0,0,.08); }
+  .brand-num { font-family:'Syne',sans-serif; font-size:1.6rem; color:var(--border); font-weight:800; flex-shrink:0; line-height:1; }
+  .brand-info h3 { font-size:.95rem; font-weight:700; color:var(--navy); margin-bottom:6px; }
+  .brand-info p { font-size:.8rem; color:var(--steel); line-height:1.6; }
+
+  /* ABOUT SECTION */
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+  .about-visual { position:relative; }
+  .about-img-main { width:100%; border-radius:12px; object-fit:cover; height:420px; }
+  .about-badge-box {
+    position:absolute; bottom:-20px; right:-20px;
+    background:var(--accent); color:white; padding:18px 24px; border-radius:10px;
+    text-align:center;
+  }
+  .about-badge-box strong { display:block; font-family:'Syne',sans-serif; font-size:1.8rem; }
+  .about-badge-box span { font-size:.75rem; opacity:.85; }
+  .about-text h2 { font-family:'Syne',sans-serif; font-size:clamp(1.5rem,2.5vw,2.2rem); margin-bottom:16px; }
+  .about-text p { color:var(--steel); line-height:1.8; margin-bottom:20px; font-size:.95rem; }
+  .why-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:28px; }
+  .why-item { display:flex; align-items:center; gap:8px; font-size:.85rem; color:var(--navy); }
+  .why-item::before { content:'✓'; color:var(--accent); font-weight:700; flex-shrink:0; }
+
+  /* CONTACT */
+  .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+  .contact-info h3 { font-family:'Syne',sans-serif; font-size:1.4rem; margin-bottom:20px; }
+  .contact-detail { display:flex; gap:14px; margin-bottom:20px; align-items:flex-start; }
+  .contact-icon { width:40px; height:40px; background:rgba(26,75,140,.08); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .contact-icon svg { width:18px; height:18px; stroke:var(--blue); fill:none; stroke-width:2; }
+  .contact-detail strong { display:block; font-size:.85rem; font-weight:600; }
+  .contact-detail span { font-size:.82rem; color:var(--steel); line-height:1.5; }
+  .contact-form { background:var(--light); border-radius:12px; padding:32px; }
+  .contact-form h3 { font-family:'Syne',sans-serif; font-size:1.2rem; margin-bottom:20px; }
+  .form-group { margin-bottom:16px; }
+  .form-group label { display:block; font-size:.8rem; font-weight:600; margin-bottom:6px; color:var(--navy); }
+  .form-group input, .form-group textarea, .form-group select {
+    width:100%; padding:10px 14px; border:1px solid var(--border); border-radius:7px;
+    font-family:'Inter',sans-serif; font-size:.875rem; color:var(--navy);
+    background:white; transition:border-color .2s; outline:none;
+  }
+  .form-group input:focus, .form-group textarea:focus { border-color:var(--blue); }
+  .form-group textarea { min-height:100px; resize:vertical; }
+  .hours-table { width:100%; border-collapse:collapse; margin-top:16px; }
+  .hours-table td { padding:8px 0; font-size:.85rem; border-bottom:1px solid var(--border); }
+  .hours-table td:last-child { text-align:right; color:var(--steel); }
+
+  /* SHOP PAGE */
+  .shop-layout { display:grid; grid-template-columns:240px 1fr; gap:32px; padding:48px 5%; }
+  .sidebar { position:sticky; top:90px; height:fit-content; }
+  .sidebar-section { margin-bottom:28px; }
+  .sidebar-title { font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--navy); margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+  .filter-item { display:flex; align-items:center; gap:8px; margin-bottom:7px; cursor:pointer; }
+  .filter-item label { font-size:.85rem; color:var(--steel); cursor:pointer; }
+  .filter-item input[type=checkbox] { accent-color:var(--blue); }
+  .sort-bar { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
+  .sort-bar span { font-size:.85rem; color:var(--steel); }
+  .sort-select { border:1px solid var(--border); border-radius:6px; padding:7px 12px; font-size:.85rem; font-family:'Inter',sans-serif; color:var(--navy); outline:none; cursor:pointer; }
+  .pagination { display:flex; gap:8px; justify-content:center; margin-top:40px; flex-wrap:wrap; }
+  .page-btn {
+    width:36px; height:36px; display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--border); border-radius:6px; font-size:.85rem; cursor:pointer;
+    font-family:'Inter',sans-serif; transition:all .2s; background:white; color:var(--navy);
+  }
+  .page-btn.active { background:var(--blue); color:white; border-color:var(--blue); }
+  .page-btn:hover:not(.active) { border-color:var(--blue); color:var(--blue); }
+  .shop-header { background:linear-gradient(135deg,var(--navy) 0%,#1A2E4A 100%); padding:40px 5%; }
+  .shop-header h1 { font-family:'Syne',sans-serif; font-size:2rem; color:white; }
+  .shop-header p { color:#94A3B8; margin-top:8px; font-size:.9rem; }
+  .breadcrumb { display:flex; gap:8px; align-items:center; font-size:.8rem; color:#64748B; margin-bottom:12px; }
+  .breadcrumb a { color:#94A3B8; text-decoration:none; }
+  .breadcrumb a:hover { color:white; }
+
+  /* FOOTER */
+  footer { background:var(--navy); color:white; padding:60px 5% 30px; }
+  .footer-grid { display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:40px; margin-bottom:48px; }
+  .footer-brand p { color:#64748B; font-size:.85rem; line-height:1.7; margin-top:14px; max-width:260px; }
+  .footer-col h4 { font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; font-weight:700; color:#94A3B8; margin-bottom:16px; }
+  .footer-col a { display:block; color:#64748B; text-decoration:none; font-size:.85rem; margin-bottom:9px; transition:color .2s; }
+  .footer-col a:hover { color:white; }
+  .footer-bottom { border-top:1px solid #1E293B; padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; }
+  .footer-bottom p { font-size:.8rem; color:#475569; }
+  .social-links { display:flex; gap:12px; }
+  .social-links a { width:34px; height:34px; background:#1E293B; border-radius:6px; display:flex; align-items:center; justify-content:center; color:#64748B; text-decoration:none; font-size:.75rem; transition:all .2s; }
+  .social-links a:hover { background:var(--accent); color:white; }
+  .logo-img { height:36px; filter:brightness(0) invert(1); }
+
+  /* CART PANEL */
+  .cart-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; display:none; }
+  .cart-panel {
+    position:fixed; right:-420px; top:0; height:100vh; width:400px;
+    background:white; z-index:201; transition:right .3s ease; box-shadow:-8px 0 40px rgba(0,0,0,.15);
+    display:flex; flex-direction:column;
+  }
+  .cart-panel.open { right:0; }
+  .cart-overlay.open { display:block; }
+  .cart-head { padding:20px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+  .cart-head h3 { font-family:'Syne',sans-serif; }
+  .cart-close { background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--steel); }
+  .cart-body { flex:1; overflow-y:auto; padding:20px 24px; }
+  .cart-item { display:flex; gap:14px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+  .cart-item img { width:64px; height:64px; object-fit:cover; border-radius:6px; background:var(--light); }
+  .cart-item-info { flex:1; }
+  .cart-item-name { font-size:.83rem; font-weight:600; color:var(--navy); margin-bottom:4px; }
+  .cart-item-price { font-size:.85rem; color:var(--accent); font-weight:600; }
+  .cart-item-remove { background:none; border:none; color:#94A3B8; cursor:pointer; font-size:.75rem; margin-top:4px; }
+  .cart-item-remove:hover { color:var(--sale); }
+  .cart-foot { padding:20px 24px; border-top:1px solid var(--border); }
+  .cart-total { display:flex; justify-content:space-between; font-weight:700; font-size:1rem; margin-bottom:16px; }
+  .cart-empty { text-align:center; padding:60px 0; color:var(--steel); }
+  .cart-empty svg { width:48px; height:48px; stroke:var(--border); fill:none; stroke-width:1.5; margin-bottom:12px; }
+  .qty-ctrl { display:flex; align-items:center; gap:6px; margin-top:6px; }
+  .qty-btn { width:22px; height:22px; border:1px solid var(--border); border-radius:4px; background:none; cursor:pointer; font-size:.85rem; display:flex; align-items:center; justify-content:center; }
+  .qty-val { font-size:.82rem; font-weight:600; min-width:18px; text-align:center; }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--navy); color:white; padding:12px 20px; border-radius:8px; font-size:.85rem; z-index:300; transform:translateY(100px); opacity:0; transition:all .3s; border-left:3px solid var(--accent); }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  @media(max-width:900px) {
+    .about-grid, .contact-grid { grid-template-columns:1fr; }
+    .about-badge-box { right:0; bottom:-10px; }
+    .shop-layout { grid-template-columns:1fr; }
+    .sidebar { position:static; }
+    .footer-grid { grid-template-columns:1fr 1fr; }
+    .hero-stats { gap:24px; }
+  }
+  @media(max-width:600px) {
+    .nav-links { display:none; }
+    .hamburger { display:flex; }
+    .footer-grid { grid-template-columns:1fr; }
+    .trust-items { flex-direction:column; align-items:flex-start; }
+    .products-grid { grid-template-columns:repeat(2,1fr); gap:14px; }
+    .brands-grid { grid-template-columns:1fr; }
+    .hero-stats { flex-wrap:wrap; gap:20px; }
+    .cart-panel { width:100%; right:-100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PROMO BAR -->
+<div class="promo-bar">🎉 Special Offer: 20% Off On All Products for New Orders! <a href="#" onclick="goPage('shop')" style="color:white;text-decoration:underline;margin-left:8px;">Shop Now →</a></div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#" onclick="goPage('home')">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+    </div>
+    <div class="logo-text">Rasik Hardware <span>Alibag, Maharashtra</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" onclick="goPage('home')" id="nav-home" class="active">Home</a></li>
+    <li><a href="#" onclick="goPage('brands')" id="nav-brands">Brands</a></li>
+    <li><a href="#" onclick="goPage('about')" id="nav-about">About</a></li>
+    <li><a href="#" onclick="goPage('contact')" id="nav-contact">Contact</a></li>
+    <li><a href="#" onclick="goPage('shop')" id="nav-shop">Shop</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="cart-icon" onclick="toggleCart()">
+      <svg width="22" height="22" fill="none" stroke="#CBD5E1" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <div class="cart-badge" id="cart-badge">0</div>
+    </div>
+    <a class="nav-cta" href="#" onclick="goPage('shop')">Shop Now</a>
+    <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<!-- ═══════════════ HOME PAGE ═══════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">🏗️ Alibag's Most Trusted Hardware Store</div>
+      <h1>Quality Hardware,<br><em>Built to Last</em></h1>
+      <p>Premium sanitaryware, plumbing, electrical, and construction materials. Serving homeowners, contractors and businesses across Alibag and Raigad district.</p>
+      <div class="hero-btns">
+        <a class="btn-primary" href="#" onclick="goPage('shop')">Browse Products</a>
+        <a class="btn-outline" href="#" onclick="goPage('brands')">Our Brands</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">89+</div><div class="stat-label">Products</div></div>
+        <div><div class="stat-num">8+</div><div class="stat-label">Trusted Brands</div></div>
+        <div><div class="stat-num">20%</div><div class="stat-label">Off New Orders</div></div>
+        <div><div class="stat-num">50km</div><div class="stat-label">Radius Service</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRUST BAR -->
+  <div class="trust-bar">
+    <div class="trust-items">
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg></div>
+        <div class="trust-text"><strong>Fast Delivery</strong><span>Within Alibag region</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div class="trust-text"><strong>Best Quality</strong><span>Trusted brand products only</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <div class="trust-text"><strong>Secure Payments</strong><span>Safe checkout always</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+        <div class="trust-text"><strong>Army Discount</strong><span>Special offer for officers</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.11 3.12 2 2 0 015.09 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L9.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div class="trust-text"><strong>Expert Advice</strong><span>+91 80103 32375</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Handpicked for You</div>
+      <h2 class="section-title">Featured Products</h2>
+      <p class="section-sub">Discover the latest in premium hardware — all at 20% off</p>
+    </div>
+    <div class="products-grid" id="home-products"></div>
+    <div style="text-align:center;margin-top:40px;">
+      <a class="btn-primary" href="#" onclick="goPage('shop')">View All 89 Products →</a>
+    </div>
+  </section>
+
+  <!-- LIMITED OFFER BANNER -->
+  <section style="background:linear-gradient(135deg,#0D1B2A 0%,#1A4B8C 100%);padding:60px 5%;text-align:center;">
+    <div class="section-eyebrow" style="color:#FF8A5C;">Limited Time Offer</div>
+    <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.8rem,4vw,3rem);color:white;margin:10px 0 14px;">Special Edition Hardware</h2>
+    <p style="color:#94A3B8;max-width:540px;margin:0 auto 28px;line-height:1.7;">Discover premium-quality hardware solutions crafted for durability and performance. Trusted products designed to meet every project need with reliability and precision.</p>
+    <a class="btn-primary" href="#" onclick="goPage('shop')">Buy at 20% Discount</a>
+  </section>
+
+  <!-- BRAND SNIPPETS -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Trusted Partners</div>
+      <h2 class="section-title">Brands We Carry</h2>
+      <p class="section-sub">Only the most reliable names in Indian hardware and sanitation</p>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Elvis India / Luxelet</div>
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Finolex</div>
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Kranti Water Meters</div>
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Zoloto Valves</div>
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Woven Gold India</div>
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Havells</div>
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Fossil Flow</div>
+      <div style="background:var(--light);border:1px solid var(--border);border-radius:8px;padding:14px 24px;font-weight:700;font-size:.85rem;color:var(--navy);">Bajaj</div>
+    </div>
+    <div style="text-align:center;margin-top:28px;">
+      <a class="btn-outline" href="#" onclick="goPage('brands')" style="color:var(--navy);border-color:var(--border);">View All Brands →</a>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════════ SHOP PAGE ═══════════════ -->
+<div id="page-shop" class="page">
+  <div class="shop-header">
+    <div class="breadcrumb"><a href="#" onclick="goPage('home')">Home</a> <span>›</span> <span style="color:white;">Shop</span></div>
+    <h1>Shop Hardware</h1>
+    <p>Showing 1–12 of 89 results — all at 20% off for new orders</p>
+  </div>
+  <div class="shop-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Category</div>
+        <div class="filter-item"><input type="checkbox" id="f1" checked><label for="f1">Hardware (89)</label></div>
+        <div class="filter-item"><input type="checkbox" id="f2"><label for="f2">Sanitaryware</label></div>
+        <div class="filter-item"><input type="checkbox" id="f3"><label for="f3">Plumbing</label></div>
+        <div class="filter-item"><input type="checkbox" id="f4"><label for="f4">Electrical</label></div>
+        <div class="filter-item"><input type="checkbox" id="f5"><label for="f5">Floor Drains</label></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Brand</div>
+        <div class="filter-item"><input type="checkbox" id="b1" checked><label for="b1">Elvis / Luxelet</label></div>
+        <div class="filter-item"><input type="checkbox" id="b2"><label for="b2">Finolex</label></div>
+        <div class="filter-item"><input type="checkbox" id="b3"><label for="b3">Havells</label></div>
+        <div class="filter-item"><input type="checkbox" id="b4"><label for="b4">Zoloto</label></div>
+        <div class="filter-item"><input type="checkbox" id="b5"><label for="b5">Kranti</label></div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Price Range</div>
+        <div style="font-size:.82rem;color:var(--steel);">₹492 – ₹11,999</div>
+        <input type="range" min="492" max="11999" value="11999" style="width:100%;margin-top:10px;accent-color:var(--blue);">
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Offers</div>
+        <div class="filter-item"><input type="checkbox" id="o1" checked><label for="o1">On Sale</label></div>
+        <div class="filter-item"><input type="checkbox" id="o2"><label for="o2">New Arrivals</label></div>
+      </div>
+    </aside>
+    <div>
+      <div class="sort-bar">
+        <span>Showing <strong>1–12</strong> of 89 products</span>
+        <select class="sort-select">
+          <option>Default sorting</option>
+          <option>Sort by popularity</option>
+          <option>Sort by average rating</option>
+          <option>Sort by latest</option>
+          <option>Sort by price: low to high</option>
+          <option>Sort by price: high to low</option>
+        </select>
+      </div>
+      <div class="products-grid" id="shop-products"></div>
+      <div class="pagination">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <span style="align-self:center;color:var(--steel);font-size:.85rem;">…</span>
+        <button class="page-btn">6</button>
+        <button class="page-btn">7</button>
+        <button class="page-btn">8</button>
+        <button class="page-btn">→</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ BRANDS PAGE ═══════════════ -->
+<div id="page-brands" class="page">
+  <div class="shop-header">
+    <div class="breadcrumb"><a href="#" onclick="goPage('home')">Home</a> <span>›</span> <span style="color:white;">Brands</span></div>
+    <h1>Our Brands</h1>
+    <p>8 trusted manufacturers — sanitaryware, plumbing, electrical &amp; more</p>
+  </div>
+  <section class="section" style="padding-top:48px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:60px;">
+      <img src="https://rasikhardware.com/wp-content/uploads/2025/08/bajaj-1-300x169.jpg" style="width:100%;border-radius:10px;object-fit:cover;height:180px;" alt="Bajaj">
+      <img src="https://rasikhardware.com/wp-content/uploads/2025/08/bajaj-300x169.jpg" style="width:100%;border-radius:10px;object-fit:cover;height:180px;" alt="Brands">
+      <img src="https://rasikhardware.com/wp-content/uploads/2025/09/channel-partners-around-50kms-300x169.jpg" style="width:100%;border-radius:10px;object-fit:cover;height:180px;" alt="Channel Partners">
+    </div>
+    <div class="brands-grid">
+      <div class="brand-card">
+        <div class="brand-num">01</div>
+        <div class="brand-info">
+          <h3>Elvis India — Luxelet</h3>
+          <p>Brand name associated with Elvis Sanitation Pvt Ltd, an Indian company manufacturing sanitaryware and premium bathroom fittings.</p>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-num">02</div>
+        <div class="brand-info">
+          <h3>ELVIS Sanitation</h3>
+          <p>PVC Faucet Manufacturers offering premium sanitation services for residential and commercial properties. Expert team ensuring cleanliness and hygiene.</p>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-num">03</div>
+        <div class="brand-info">
+          <h3>Finolex</h3>
+          <p>The only large, vertically integrated manufacturer of PVC pipes and fittings in India, with its own PVC resin production.</p>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-num">04</div>
+        <div class="brand-info">
+          <h3>Kranti Water Meter</h3>
+          <p>Prominent Indian manufacturer of water meters since 1980. Produces domestic, agricultural, industrial and commercial meters for the Indian market.</p>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-num">05</div>
+        <div class="brand-info">
+          <h3>Zoloto Valves</h3>
+          <p>Since 1966 — a leading manufacturer of Bronze, Brass, Cast Iron, Cast Steel, Forged Steel &amp; Stainless Steel Valves for all fluid applications.</p>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-num">06</div>
+        <div class="brand-info">
+          <h3>Woven Gold India</h3>
+          <p>Premium bathtubs, Jacuzzi, Spa, Steam, Sauna, Chiller Bath, Multi Flow Showers &amp; accessories. 30 years of elevated bathroom experiences.</p>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-num">07</div>
+        <div class="brand-info">
+          <h3>Havells Geysers</h3>
+          <p>Leading FMEG company manufacturing a wide range of electrical products. Key brands include Havells, Lloyd, Havells Crabtree &amp; Standard Electricals.</p>
+        </div>
+      </div>
+      <div class="brand-card">
+        <div class="brand-num">08</div>
+        <div class="brand-info">
+          <h3>Fossil Flow</h3>
+          <p>Reliable plumbing and flow solutions trusted by professionals across Maharashtra.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK SERVICE CALLOUT -->
+    <div style="background:linear-gradient(135deg,var(--navy),#1A4B8C);border-radius:14px;padding:40px;margin-top:52px;text-align:center;">
+      <div class="section-eyebrow" style="color:#FF8A5C;">Quick Service</div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:1.8rem;color:white;margin:10px 0 12px;">Your Trusted Hardware Partner in Alibag</h2>
+      <p style="color:#94A3B8;max-width:520px;margin:0 auto 24px;line-height:1.7;">At Rasik Hardware, we are more than just a hardware store. Established in Alibag, serving homeowners, contractors, and businesses for years.</p>
+      <a href="tel:+918010332375" class="btn-primary" style="font-size:1rem;">📞 +91 80103 32375</a>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════ ABOUT PAGE ═══════════════ -->
+<div id="page-about" class="page">
+  <div class="shop-header">
+    <div class="breadcrumb"><a href="#" onclick="goPage('home')">Home</a> <span>›</span> <span style="color:white;">About</span></div>
+    <h1>About Rasik Hardware</h1>
+    <p>Alibag's most trusted hardware partner since establishment</p>
+  </div>
+  <section class="section">
+    <div class="about-grid">
+      <div class="about-visual">
+        <img src="https://rasikhardware.com/wp-content/uploads/2025/08/WhatsApp-Image-2025-08-20-at-12.52.12-768x1024.jpeg" class="about-img-main" alt="Rasik Hardware Store">
+        <div class="about-badge-box"><strong>20%</strong><span>Off New Orders</span></div>
+      </div>
+      <div class="about-text">
+        <div class="section-eyebrow">About Us</div>
+        <h2>Rasik Hardware,<br>Alibag</h2>
+        <p>At Rasik Hardware, we are more than just a hardware store — we are your trusted partner in building, repairing, and enhancing spaces. Established in Alibag, we have proudly served homeowners, contractors, and businesses for years with quality products, expert guidance, and reliable service.</p>
+        <p>Our store offers a comprehensive range of hardware, tools, paints, plumbing supplies, electrical fittings, construction materials, and home improvement essentials — all sourced from trusted brands to ensure durability and performance.</p>
+        <p>We believe in combining quality, affordability, and customer satisfaction, making sure every customer finds exactly what they need, whether it's for a small DIY project or a large-scale construction job.</p>
+        <div class="why-grid">
+          <div class="why-item">Best Price in Market</div>
+          <div class="why-item">Professional Staff</div>
+          <div class="why-item">Affordable Prices</div>
+          <div class="why-item">No Hidden Costs</div>
+          <div class="why-item">Discounts for Army Officers</div>
+          <div class="why-item">Emergency Services</div>
+          <div class="why-item">Guaranteed Work</div>
+          <div class="why-item">Fast Service</div>
+          <div class="why-item">Highly Trained Staff</div>
+          <div class="why-item">Free Consultation</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEAM / FOUNDERS -->
+    <div style="margin-top:80px;">
+      <div class="section-header">
+        <div class="section-eyebrow">Our Legacy</div>
+        <h2 class="section-title">The Jain Family</h2>
+        <p class="section-sub">Generations of trust, hardware expertise and community service</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;">
+        <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:12px;">
+          <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--blue),var(--navy));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:white;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;">AJ</div>
+          <div style="font-weight:700;font-size:.95rem;">Asulalji P Jain</div>
+          <div style="font-size:.78rem;color:var(--steel);margin-top:4px;">Founder</div>
+        </div>
+        <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:12px;">
+          <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--accent),#C4400A);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:white;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;">TJ</div>
+          <div style="font-weight:700;font-size:.95rem;">Thanmal A Jain</div>
+          <div style="font-size:.78rem;color:var(--steel);margin-top:4px;">Partner</div>
+        </div>
+        <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:12px;">
+          <div style="width:72px;height:72px;background:linear-gradient(135deg,#2D6A4F,#1B4332);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:white;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;">BJ</div>
+          <div style="font-weight:700;font-size:.95rem;">Bharatkumar T Jain</div>
+          <div style="font-size:.78rem;color:var(--steel);margin-top:4px;">Partner</div>
+        </div>
+        <div style="text-align:center;padding:28px 20px;border:1px solid var(--border);border-radius:12px;background:var(--light);">
+          <div style="width:72px;height:72px;background:linear-gradient(135deg,var(--navy),var(--blue));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:white;font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;">RJ</div>
+          <div style="font-weight:700;font-size:.95rem;">Rasiklal T Jain</div>
+          <div style="font-size:.78rem;color:var(--steel);margin-top:4px;">Proprietor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORE PHOTOS -->
+    <div style="margin-top:60px;">
+      <div class="section-eyebrow" style="text-align:center;margin-bottom:24px;">Our Store</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+        <img src="https://rasikhardware.com/wp-content/uploads/2025/08/WhatsApp-Image-2025-08-17-at-15.29.21-461x1024.jpeg" style="width:100%;border-radius:10px;object-fit:cover;height:260px;" alt="Store">
+        <img src="https://rasikhardware.com/wp-content/uploads/2025/09/IMG_20250901_142127-225x300.jpg" style="width:100%;border-radius:10px;object-fit:cover;height:260px;" alt="Store">
+        <img src="https://rasikhardware.com/wp-content/uploads/2025/08/WhatsApp-Image-2025-08-17-at-15.30.10-1001x1024.jpeg" style="width:100%;border-radius:10px;object-fit:cover;height:260px;" alt="Store">
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════ CONTACT PAGE ═══════════════ -->
+<div id="page-contact" class="page">
+  <div class="shop-header">
+    <div class="breadcrumb"><a href="#" onclick="goPage('home')">Home</a> <span>›</span> <span style="color:white;">Contact</span></div>
+    <h1>Get In Touch</h1>
+    <p>We're here to help. Visit us, call us, or drop a message.</p>
+  </div>
+  <section class="section">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>Rasik Hardware, Alibag</h3>
+        <p style="color:var(--steel);font-size:.9rem;line-height:1.7;margin-bottom:28px;">Your trusted hardware partner for all building, renovation, and home improvement needs. Knowledgeable staff always ready to assist.</p>
+
+        <div class="contact-detail">
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><strong>Address</strong><span>Rasik Hardware, Sadguru Building, Basement No. 02<br>Near Kacchi Bhavan Temple, Shreebag No. 02<br>Alibag 402201, Maharashtra</span></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 013.11 3.12 2 2 0 015.09 1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L9.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></div>
+          <div><strong>Phone</strong><span><a href="tel:+918010332375" style="color:var(--blue);text-decoration:none;">+91 80103 32375</a></span></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><strong>Store Hours</strong><span>See schedule below</span></div>
+        </div>
+
+        <table class="hours-table">
+          <tr><td>Monday – Saturday</td><td>9:00 AM – 8:00 PM</td></tr>
+          <tr><td>Lunch Break</td><td>1:30 PM – 2:30 PM</td></tr>
+          <tr><td>Sunday</td><td style="color:var(--sale);font-weight:600;">Closed</td></tr>
+        </table>
+
+        <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="https://www.instagram.com/rasik_hardware/" target="_blank" class="btn-outline" style="padding:10px 18px;font-size:.82rem;border-color:var(--border);color:var(--navy);">📸 Instagram</a>
+          <a href="https://www.youtube.com/@rasikhardware" target="_blank" class="btn-outline" style="padding:10px 18px;font-size:.82rem;border-color:var(--border);color:var(--navy);">▶ YouTube</a>
+          <a href="https://www.google.com/search?q=rasik+hardware+alibag+reviews" target="_blank" class="btn-outline" style="padding:10px 18px;font-size:.82rem;border-color:var(--border);color:var(--navy);">⭐ Google Reviews</a>
+        </div>
+      </div>
+      <div>
+        <div class="contact-form">
+          <h3>Send Us a Message</h3>
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="Full name">
+          </div>
+          <div class="form-group">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" placeholder="+91 XXXXX XXXXX">
+          </div>
+          <div class="form-group">
+            <label>Email (optional)</label>
+            <input type="email" placeholder="you@email.com">
+          </div>
+          <div class="form-group">
+            <label>What do you need?</label>
+            <select>
+              <option>Product enquiry</option>
+              <option>Price quote</option>
+              <option>Bulk order</option>
+              <option>Delivery information</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea placeholder="Tell us what you're looking for…"></textarea>
+          </div>
+          <button class="btn-primary" style="width:100%;" onclick="showToast('Message sent! We\'ll contact you shortly.')">Send Message</button>
+        </div>
+
+        <!-- MAP EMBED PLACEHOLDER -->
+        <div style="margin-top:20px;border-radius:10px;overflow:hidden;border:1px solid var(--border);height:200px;background:var(--light);display:flex;align-items:center;justify-content:center;color:var(--steel);font-size:.85rem;flex-direction:column;gap:8px;">
+          <svg width="32" height="32" fill="none" stroke="var(--blue)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Sadguru Building, Alibag 402201</span>
+          <a href="https://maps.google.com/?q=Rasik+Hardware+Alibag" target="_blank" style="color:var(--blue);font-weight:600;font-size:.8rem;">Open in Google Maps →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER (shared) -->
+<footer id="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <div class="logo-icon" style="width:36px;height:36px;"><svg viewBox="0 0 24 24" style="width:18px;height:18px;" fill="white"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></div>
+        <span style="font-family:'Syne',sans-serif;color:white;font-size:1.1rem;">Rasik Hardware</span>
+      </div>
+      <p>Your trusted hardware partner in Alibag — hardware, plumbing, electrical, sanitaryware and more. Est. Alibag, Maharashtra.</p>
+      <div style="margin-top:16px;font-size:.78rem;color:#475569;">Lunch: 1:30–2:30 PM · Sunday Closed</div>
+    </div>
+    <div class="footer-col">
+      <h4>Quick Links</h4>
+      <a href="#" onclick="goPage('home')">Home</a>
+      <a href="#" onclick="goPage('brands')">Brands</a>
+      <a href="#" onclick="goPage('about')">About Us</a>
+      <a href="#" onclick="goPage('contact')">Contact</a>
+      <a href="#" onclick="goPage('shop')">Shop</a>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <a href="#">Sanitaryware</a>
+      <a href="#">Plumbing</a>
+      <a href="#">Electrical</a>
+      <a href="#">Floor Drains</a>
+      <a href="#">Valves &amp; Fittings</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="tel:+918010332375">+91 80103 32375</a>
+      <a href="https://www.instagram.com/rasik_hardware/" target="_blank">Instagram</a>
+      <a href="https://www.youtube.com/@rasikhardware" target="_blank">YouTube</a>
+      <a href="https://www.google.com/search?q=rasik+hardware+alibag+reviews" target="_blank">Google Reviews</a>
+      <div style="font-size:.78rem;color:#475569;margin-top:6px;line-height:1.6;">Sadguru Building, Basement No. 02<br>Near Kacchi Bhavan Temple<br>Alibag 402201</div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Rasik Hardware, Alibag. Digital presence by <strong style="color:#94A3B8;">Auspex Digital Marketing</strong></p>
+    <div class="social-links">
+      <a href="https://www.instagram.com/rasik_hardware/" target="_blank">IG</a>
+      <a href="https://www.youtube.com/@rasikhardware" target="_blank">YT</a>
+      <a href="tel:+918010332375">📞</a>
+    </div>
+  </div>
+</footer>
+
+<!-- CART OVERLAY & PANEL -->
+<div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cart-body"></div>
+  <div class="cart-foot" id="cart-foot" style="display:none;">
+    <div class="cart-total"><span>Total</span><span id="cart-total-val">₹0</span></div>
+    <button class="btn-primary" style="width:100%;padding:13px;" onclick="showToast('Order placed! We\'ll contact you to confirm.')">Place Order</button>
+    <p style="font-size:.75rem;color:var(--steel);text-align:center;margin-top:10px;">Call us at +91 80103 32375 for bulk orders</p>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// PRODUCTS DATA
+const products = [
+  { id:1, name:'Basin / Table Top 17 x 12', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/bf4cd80b-f1b0-4513-ac87-8d6196f99f9f-300x300.jpg', original:1200, sale:720 },
+  { id:2, name:'Cera Jeet Jolly 14', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/cbaa73a4-1f5e-4b5b-860f-24107c58ab5a-300x300.jpg', original:2400, sale:1440 },
+  { id:3, name:'Elvis Accura Wall Hung with UF Seat Cover (ACR RL 960454BI) – White 510×355×370mm', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/02/Accura.jpg', original:13999, sale:11999 },
+  { id:4, name:'Elvis Allied Angle Cock', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/870558df-6a6d-4872-af17-1908f0529dda-300x300.jpg', original:615, sale:492 },
+  { id:5, name:'Elvis AXR Con Body of Diverter + Expo Part (Cartridge 40mm) 915045K', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/03/unnamed-14-300x300.jpg', original:6224, sale:4979 },
+  { id:6, name:'Elvis BGR Allied Angle Cock 15mm', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/2f5187c3-14ca-4437-8af6-8302ee885e2b-300x300.jpg', original:1080, sale:810 },
+  { id:7, name:'Elvis Cubix 15 x 15', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/ea7e2c6b-4cdc-43e9-bc57-891f293acaf2-300x300.jpg', original:5990, sale:3594 },
+  { id:8, name:'Elvis EDR Expo Set (Divertor Body + Expo Part) Cartridge 40mm 15045K', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/03/Screenshot-2026-03-16-162435-300x300.png', original:5500, sale:4400 },
+  { id:9, name:'Elvis Euro Smart Wall Hung with UF Seat Cover (EURO RL 770251BI) – White 485×360×360mm', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/02/Eurosmart.jpg', original:13999, sale:11199 },
+  { id:10, name:'Elvis FG Angle Cock Round Heavy with Flange', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/fd059b4c-e895-41b8-a908-09ec42e6239b-300x300.jpg', original:1080, sale:810 },
+  { id:11, name:'Elvis Floor Drain MB 150 x 150', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-06-at-6.29.46-PM-300x300.jpeg', original:1093, sale:875 },
+  { id:12, name:'Elvis Floor Drain RG 150 x 150', category:'Hardware', img:'https://rasikhardware.com/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-06-at-6.29.45-PM-300x300.jpeg', original:1093, sale:875 },
+];
+
+let cart = {};
+
+function formatINR(n) { return '₹' + n.toLocaleString('en-IN'); }
+
+function renderProducts(containerId, count) {
+  const el = document.getElementById(containerId);
+  const items = products.slice(0, count);
+  el.innerHTML = items.map(p => `
+    <div class="product-card" onclick="">
+      <div class="product-img-wrap">
+        <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x300/F7F9FC/94A3B8?text=Product'">
+        <div class="sale-badge">Sale</div>
+      </div>
+      <div class="product-info">
+        <div class="product-category">${p.category}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="price-row">
+          <div class="price-current">${formatINR(p.sale)}</div>
+          <div class="price-original">${formatINR(p.original)}</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  cart[id] = cart[id] ? { ...cart[id], qty: cart[id].qty + 1 } : { ...p, qty: 1 };
+  updateCartUI();
+  showToast(`${p.name.substring(0,40)}… added to cart`);
+}
+
+function updateCartUI() {
+  const items = Object.values(cart);
+  const count = items.reduce((s, i) => s + i.qty, 0);
+  document.getElementById('cart-badge').textContent = count;
+  const body = document.getElementById('cart-body');
+  const foot = document.getElementById('cart-foot');
+  if (items.length === 0) {
+    body.innerHTML = `<div class="cart-empty"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>Your cart is empty</p><a href="#" onclick="goPage('shop');toggleCart()" style="color:var(--blue);font-weight:600;font-size:.85rem;margin-top:8px;display:block;">Browse Products →</a></div>`;
+    foot.style.display = 'none';
+  } else {
+    body.innerHTML = items.map(i => `
+      <div class="cart-item">
+        <img src="${i.img}" alt="${i.name}" onerror="this.src='https://via.placeholder.com/64/F7F9FC/94A3B8?text=P'">
+        <div class="cart-item-info">
+          <div class="cart-item-name">${i.name.substring(0,55)}${i.name.length>55?'…':''}</div>
+          <div class="cart-item-price">${formatINR(i.sale)}</div>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(${i.id},-1)">−</button>
+            <span class="qty-val">${i.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${i.id},1)">+</button>
+            <button class="cart-item-remove" onclick="removeFromCart(${i.id})">Remove</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    const total = items.reduce((s, i) => s + i.sale * i.qty, 0);
+    document.getElementById('cart-total-val').textContent = formatINR(total);
+    foot.style.display = 'block';
+  }
+}
+
+function changeQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty += delta;
+  if (cart[id].qty <= 0) delete cart[id];
+  updateCartUI();
+}
+function removeFromCart(id) { delete cart[id]; updateCartUI(); }
+
+function toggleCart() {
+  document.getElementById('cart-panel').classList.toggle('open');
+  document.getElementById('cart-overlay').classList.toggle('open');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  return false;
+}
+
+function toggleMenu() {
+  const links = document.querySelector('.nav-links');
+  links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+  links.style.flexDirection = 'column';
+  links.style.position = 'absolute';
+  links.style.top = '68px';
+  links.style.left = '0';
+  links.style.right = '0';
+  links.style.background = 'var(--navy)';
+  links.style.padding = '16px 5%';
+  links.style.zIndex = '99';
+}
+
+// INIT
+renderProducts('home-products', 6);
+renderProducts('shop-products', 12);
+updateCartUI();
+</script>
+</body>
+</html>
